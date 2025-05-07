@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} GoITeens {% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="static/css/base.css">
+    {% block static_files %}
+    {% endblock %}
+</head>
+<body>
+    <header>
+        <h1>GoITeens Shop</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}" target="_blank" title="Main">Home</a></li>
+                <li><a href="{% url 'about' %}">Shop</a></li>
+                <li><a href="#">About us</a></li>
+                <li><a href="#">Contact us</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="custom_auth/logout">Logout</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    {% block content %}
+    {% endblock %}
+    <footer>
+        Please take a care ! 2025
+    </footer>
+</body>
+</html>

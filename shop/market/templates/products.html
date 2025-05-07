@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %} Products {% endblock title %}
+
+{% block content %}
+{% load humanize %}
+<main>
+    <section>
+      <ul>
+      {% for stuff in products %}
+        <li>
+            <p>
+              <img src="static/img/{{ stuff.photo }}", alt="Product 1">
+              <h3>{{ stuff.name|escape }}</h3>
+              {% if stuff.is_available != True %}
+                    <h2>{{ stuff.is_available|yesno:"Available,Over stock" }}</h2>
+              {% endif %}
+              <p>{{ stuff.desc|truncatechars:50}}</p>
+              <button>{{ stuff.price | intcomma }}</button>
+              <button>Add to Cart</button>
+            </p>
+        </li>
+      {% endfor %}
+      </ul>
+    </section>
+    <div>
+        {% if page.has_previous %}
+            <a href="?page={{ page.previous_page_number }}">&lt;</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+        {% endif %}
+        Частина №{{ page.number }} из {{ page.paginator.num_pages }}
+        {% if page.has_next %}
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="?page={{ page.next_page_number }}">&gt;</a>
+        {% endif %}
+    </div>
+  </main>
+
+{% endblock content %}

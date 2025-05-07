@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %} Persons {% endblock title %}
+
+{% block content %}
+
+<h1>All persons</h1>
+<ul>
+    {% for person in persons %}
+        <li>First name -> <b>{{ person.first_name }}</b>; Surname -> <b>{{ person.last_name }}</b></li>
+    {% endfor %}
+
+</ul>
+
+{% endblock content %}

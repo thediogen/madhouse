@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title|upper_case }}{% endblock title %}
+
+{% block content %}
+    <main>
+
+        <section>
+          <h2>New Arrivals</h2>
+          <ul>
+            <li>
+              <img src="static/img/1.jpg" alt="Product 1">
+              <h3>Product 1</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              <button>Add to Cart</button>
+            </li>
+            <li>
+              <img src="static/img/2.jpg" alt="Product 2">
+              <h3>Product 2</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              <button>Add to Cart</button>
+            </li>
+            <li>
+              <img src="static/img/3.jpg" alt="Product 3">
+              <h3>Product 3</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              <button>Add to Cart</button>
+            </li>
+          </ul>
+        </section>
+        <section>
+          <h2>Best Sellers</h2>
+          <ul>
+            <li>
+              <img src="static/img/4.jpg" alt="Product 4">
+              <h3>Product 4</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              <button>Add to Cart</button>
+            </li>
+            <li>
+              <img src="static/img/5.jpg" alt="Product 5">
+              <h3>Product 5</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              <button>Add to Cart</button>
+            </li>
+            <li>
+              <img src="static/img/6.jpg" alt="Product 6">
+              <h3>Product 6</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              <button>Add to Cart</button>
+            </li>
+          </ul>
+        </section>
+    </main>
+{% endblock content %}
