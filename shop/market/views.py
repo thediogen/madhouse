@@ -13,7 +13,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 
 from .models import Person, Stuff
-from .forms import PersonForm, PersonModelForm
+from .forms import PersonForm, PersonModelForm, GetAllPersonForms, CreateNewPersonForms
 
 
 def index(request):
@@ -213,17 +213,21 @@ def create_person_form(request):
     context = {"form": new_form}
     return render(request, "forms.html", context)
 
-# def register(request):
-#     if request.method == "POST":
-#         form = NewUserForm(request.POST)
-#
-#         if form.is_valid():
-#             user = form.save()
-#             login(request, user)
-#             messages.success(request, "Registration successful")
-#             return redirect("index")
-#         else:
-#             return render(request, '400.html')
-#
-#     form = NewUserForm()
-#     return render(request=request, template_name="register.html", context={"register_form": form})
+def get_all_form_persons(request):
+    # if request.method == "POST":
+    #     pass
+    #
+    forms = GetAllPersonForms()
+    context = {"forms": forms}
+    return render(request, "several_forms.html", context=context)
+
+def create_several_persons(request):
+    if request.method == "POST":
+        forms = CreateNewPersonForms(request.POST)
+        if forms.is_valid():
+            forms.save()
+            return redirect("index")
+
+    forms = CreateNewPersonForms(queryset=Person.objects.none())
+    context = {"forms": forms}
+    return render(request, "several_forms.html", context=context)

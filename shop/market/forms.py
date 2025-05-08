@@ -2,25 +2,28 @@ import os
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.forms import modelform_factory, Select, CharField, ModelForm, IntegerField
+from django.forms import modelform_factory, Select, CharField, ModelForm, IntegerField, modelformset_factory
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy
 
 from .models import Person
 
-def make_mistake(value):
-    if value > 16:
-        raise ValidationError(
-            gettext_lazy("MISTAKE"),
-            params={"value": value}
-        )
+
+GetAllPersonForms = modelformset_factory(Person, fields="__all__")
+CreateNewPersonForms = modelformset_factory(Person, fields="__all__", extra=3)
 
 
+
+
+def validate_title(value):
+    if value == "Last year snow":
+        raise ValidationError("Baned title")
 
 
 
 class PersonModelForm(ModelForm):
-    age = IntegerField(label="Your age", validators=[make_mistake])
+    age = IntegerField(label="Your age", min_value=18)
+    first_name = CharField(required=True, validators=[validate_title])
 
     class Meta:
         model = Person
