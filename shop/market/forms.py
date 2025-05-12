@@ -38,3 +38,6 @@ PersonForm = modelform_factory(
     help_texts={"first_name": "Example Misha"},
     field_classes={"first_name": CharField}
 )
+
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=100)

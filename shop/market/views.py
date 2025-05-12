@@ -1,11 +1,19 @@
 import time
 import traceback
+from datetime import datetime
 
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
 from django.http import HttpResponse, HttpResponseBadRequest, StreamingHttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Min, Max
+from django.db.models import Min, Max, Q
+from django.template.loader import render_to_string
 from django.urls import reverse
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from django.views.decorators.http import require_http_methods
 from django.views.generic import TemplateView
 from django.contrib import messages
@@ -13,7 +21,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 
 from .models import Person, Stuff
-from .forms import PersonForm, PersonModelForm, GetAllPersonForms, CreateNewPersonForms
+from .forms import PersonForm, PersonModelForm, GetAllPersonForms, CreateNewPersonForms, LoginForm
 
 
 def index(request):
@@ -231,3 +239,97 @@ def create_several_persons(request):
     forms = CreateNewPersonForms(queryset=Person.objects.none())
     context = {"forms": forms}
     return render(request, "several_forms.html", context=context)
+
+
+def set_cookies_example(request):
+    response = HttpResponse("Cookies were set")
+
+    from datetime import datetime, timedelta
+
+    expires = datetime.utcnow() + timedelta(seconds=10)
+
+    response.set_cookie("key", "secret", expires=expires, secure=False)
+
+    return response
+
+
+def check_cookies_example(request):
+
+    cookies = request.COOKIES
+
+    if "key" not in cookies:
+        return HttpResponse(f"403")
+
+    return HttpResponse(f"Cookies - {cookies}")
+
+
+def login_test(request):
+    username = "not logged in"
+
+    if request.method == "POST":
+        # Get the posted form
+        MyLoginForm = LoginForm(request.POST)
+
+        if MyLoginForm.is_valid():
+            username = MyLoginForm.cleaned_data['username']
+        else:
+            return HttpResponse("500")
+
+        response = render(request, 'loggedin.html', {"username": username},)
+
+        response.set_cookie('last_connection', datetime.now())
+        response.set_cookie('username', datetime.now())
+
+        return response
+
+
+    MyLoginForm = LoginForm()
+
+    response = render(request, 'login.html', {"form": MyLoginForm})
+    return response
+
+
+def formView(request):
+    if 'username' in request.COOKIES and 'last_connection' in request.COOKIES:
+        username = request.COOKIES['username']
+
+        last_connection = request.COOKIES['last_connection']
+        last_connection_time = datetime.strptime(last_connection[:-7],
+                                                          "%Y-%m-%d %H:%M:%S")
+
+        if (datetime.now() - last_connection_time).seconds < 10:
+            return render(request, 'loggedin.html', {"username": username})
+        else:
+            return redirect("login_test")
+
+    else:
+        return redirect("login_test")
+
+
+def password_reset_request(request):
+    if request.method == "POST":
+        password_reset_form = PasswordResetForm(request.POST)
+        if password_reset_form.is_valid():
+            data = password_reset_form.cleaned_data['email']
+            associated_users = User.objects.filter(Q(email=data))
+            if associated_users.exists():
+                for user in associated_users:
+                    subject = "Password Reset Requested"
+                    email_template_name = "registration/password_reset_email.html"
+                    c = {
+                    "email":user.email,
+                    'domain':'127.0.0.1:8000',
+                    'site_name': 'Website',
+                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                    "user": user,
+                    'token': default_token_generator.make_token(user),
+                    'protocol': 'http',
+                    }
+                    email = render_to_string(email_template_name, c)
+                    try:
+                        send_mail(subject, email, 'admin@example.com' , [user.email], fail_silently=False)
+                    except Exception:
+                        return HttpResponse('Invalid header found.')
+                    return redirect ("registration/password_reset/done/")
+    password_reset_form = PasswordResetForm()
+    return render(request=request, template_name="registration/password_reset.html", context={"password_reset_form":password_reset_form})

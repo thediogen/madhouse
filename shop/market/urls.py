@@ -4,7 +4,8 @@ from django.views.generic import TemplateView
 from .views import (index, get_person_by_pk, get_person_by_surname, change_surname, get_or_create_person,
                     update_or_create_person, create_person, delete_person, get_all_persons, request_info_check,
                     index22, tutorial, AboutAs, get_all_stuff, get_all_product_2, create_person_form,
-                    get_all_form_persons, create_several_persons)
+                    get_all_form_persons, create_several_persons, set_cookies_example, check_cookies_example,
+                    formView, login_test, password_reset_request)
 
 urlpatterns = [
     path("", index, name="index"),
@@ -24,5 +25,10 @@ urlpatterns = [
     path("products2", get_all_product_2),
     path("form", create_person_form),
     path("forms", get_all_form_persons),
-    path("create_forms", create_several_persons)
+    path("create_forms", create_several_persons),
+    path("set", set_cookies_example),
+    path("cok", check_cookies_example),
+    path('connection', formView, name='loginform'),
+    path('login', login_test, name="login_test"),
+    path('reset1', password_reset_request)
 ]
