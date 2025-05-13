@@ -1,9 +1,4 @@
-# PYTHON_1y_25_25_10_23 (1 група) Django
+# Homework #3
 
-### How use
-
-```bash
-- pip install -r requirements.txt
-- cd shop
-- python manage.py runserver
-```
+* про сторінку про себе: я її робив у іншій ДЗ
+* 

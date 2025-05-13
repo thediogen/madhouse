@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+
+{% block title %} Products {% endblock title %}
+
+{% block content %}
+
+<main>
+    <ol>
+       {% for album in albums %}
+        <li>{{ album.name }}</li>
+        <li>{{ album.release_date }}</li>
+        <li>{{ album.num_stars }}</li>
+       {% endfor %}
+    </ol>
+
+    <hr>
+
+    <ol>
+       {% for musician in musicians %}
+        <li>{{ musician.first_name }}</li>
+        <li>{{ musician.last_name }}</li>
+        <li>{{ musician.instrument }}</li>
+       {% endfor %}
+    </ol>
+
+    <hr>
+
+    <table border="1">
+        <tr>
+            <th>first name</th>
+            <th>last name</th>
+            <th>instrument</th>
+        </tr>
+
+        {% for musician in musicians %}
+        <tr>
+            <th>{{ musician.first_name }}</th>
+            <th>{{ musician.last_name }}</th>
+            <th>{{ musician.instrument }}</th>
+        </tr>
+        {% endfor %}
+    </table>
+</main>
+
+{% endblock %}

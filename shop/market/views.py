@@ -20,7 +20,7 @@ from django.contrib import messages
 
 from django.core.paginator import Paginator
 
-from .models import Person, Stuff
+from .models import Person, Stuff, Album, Musician
 from .forms import PersonForm, PersonModelForm, GetAllPersonForms, CreateNewPersonForms, LoginForm
 
 
@@ -333,3 +333,15 @@ def password_reset_request(request):
                     return redirect ("registration/password_reset/done/")
     password_reset_form = PasswordResetForm()
     return render(request=request, template_name="registration/password_reset.html", context={"password_reset_form":password_reset_form})
+
+
+def albums_n_musicians_output(request):
+    all_albums = Album.objects.all()
+    all_musicians = Musician.objects.all()
+
+    context = {
+        'albums': all_albums,
+        'musicians': all_musicians,
+    }
+
+    return render(request, 'homework3.html', context=context)
